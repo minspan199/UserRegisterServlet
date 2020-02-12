@@ -1,0 +1,38 @@
+@charset "ISO-8859-1";
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label-group input {
+  height: auto;
+  border-radius: 2rem;
+}
+
+.card-signin {
+  width: 90%;
+  border: 0;
+  border-radius: 2rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form-signin .btn {
+  font-size: 80%;
+  border-radius: 1rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+  transition: all 1s;
+}
+
+.alert{
+	background:rgba(255,255,255,0.5);
+}
+
+.card-signin .card-img-left {
+  width: 45%;
+  /* Link to your background image using in the property below! */
+  background: scroll center url('https://source.unsplash.com/WEQbe2jBg40/414x512');
+  background-size: cover;
+}
