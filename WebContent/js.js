@@ -1,4 +1,6 @@
-$(document).ready(function(){
-    $("#toast").toast('show');
-});
 
+
+$(document).ready(function () {
+	  $('#dtBasicExample').DataTable();
+	  $('.dataTables_length').addClass('bs-select');
+});
