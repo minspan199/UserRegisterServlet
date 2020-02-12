@@ -17,12 +17,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import registerServlet.dao.Dao;
+import registerServlet.dao.DaoImpl;
+import registerServlet.model.Person;
+
 /**
  * Servlet implementation class register2db
  */
 @WebServlet("/UserRegisterService/register")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private Dao userDao;
 
 	/**
 	 * Default constructor.
@@ -58,7 +63,7 @@ public class Register extends HttpServlet {
 		String role = request.getParameter("role");
 		String department = request.getParameter("department");
 		String email = request.getParameter("email");
-
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		Date d;
 		try {
@@ -69,33 +74,16 @@ public class Register extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
+		Person person = new Person(userFirstName, userLastName, birthDate, role, department, email);
 		boolean success = false;
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			String jdbcUrl = "jdbc:mysql://localhost:3306/students";
-			String userName = "root";
-			String password = "@p232324P";
-			Connection connection = DriverManager.getConnection(jdbcUrl, userName, password);
-			Statement statement = connection.createStatement();
-			String createTable = "CREATE TABLE IF NOT EXISTS `students_tomcat` "
-					+ "( `id` int(11) NOT NULL auto_increment, " + "`userFirstName` varchar(250) NOT NULL default '', "
-					+ "`userLastName` varchar(250)  NOT NULL default '', " + "`birthDate`  DATETIME NOT NULL, "
-					+ "`role` varchar(50)  NULL, " + "`department`  varchar(100) NOT NULL default '', "
-					+ "`email` varchar(50) NOT NULL unique default '', " + "PRIMARY KEY  (`id`) );";
-			statement.execute(createTable);
-			String insertEntry = "INSERT INTO students_tomcat (userFirstName, userLastName, birthDate, role, department, email) "
-					+ "VALUES('" + userFirstName + "','" + userLastName + "','" + birthDate + "','" + role + "','"
-					+ department + "','" + email + "') " + "ON DUPLICATE KEY UPDATE email='" + email + "'";
-//			printWriter.println("sql syntax:   "+insertEntry);
-			statement.execute(insertEntry);
+			userDao.init();
+			userDao.insertPerson(person);
 			success = true;
 		} catch (SQLException e) {
 			// TODO: handle exception
 			request.setAttribute("error", "sql exception: " + e.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO: handle exception
-			request.setAttribute("error", "class not found: " + e.getMessage());
 		} finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/form.jsp");
 			if (success) {

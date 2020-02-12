@@ -40,6 +40,7 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
+	<jsp:include page="/header.jsp"></jsp:include>
 	<div class="container">
 		<%
 			String success = "";
@@ -53,7 +54,8 @@
 		%>
 
 		<c:if test="${not empty success}">
-			<div class="alert alert-success alert-dismissible fade show my-5" role="alert">
+			<div class="alert alert-success alert-dismissible fade show my-5"
+				role="alert">
 				<a class="close" data-dismiss="alert"><i
 					class="fas fa-window-close"></i></a>
 				<h4 class="alert-heading">
@@ -142,5 +144,42 @@
 			</div>
 		</div>
 	</div>
+
+	<hr>
+	<table id="dtBasicExample"
+		class="table table-striped table-bordered table-sm" cellspacing="0"
+		width="100%">
+		<thead>
+			<tr>
+				<th class="th-sm">Name</th>
+				<th class="th-sm">Role</th>
+				<th class="th-sm">Department</th>
+				<th class="th-sm">email</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Tiger Nixon</td>
+				<td>System Architect</td>
+				<td>Edinburgh</td>
+				<td>61</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th>Name</th>
+				<th>Role</th>
+				<th>Department</th>
+				<th>email</th>
+			</tr>
+		</tfoot>
+	</table>
+
+	<div class="col-xl-8 col-xs-12">
+		<jsp:include page="/footer.jsp"></jsp:include>
+	</div>
+
+
+
 </body>
 </html>

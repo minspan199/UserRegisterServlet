@@ -27,7 +27,7 @@
 		<filter-class>org.apache.catalina.filters.CsrfPreventionFilter</filter-class>
 		<init-param>
 			<param-name>entryPoints</param-name>
-			<param-value>/form.jsp, /style.css, /js.js</param-value>
+			<param-value>/form.jsp, /style.css, /js.js, /header.jsp, /footer.jsp</param-value>
 		</init-param>
 	</filter>
 
