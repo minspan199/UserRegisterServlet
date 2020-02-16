@@ -9,13 +9,13 @@ public interface Dao {
 
  void insertPerson(Person person) throws SQLException;
 
- Person selectPerson(String email);
+ Person selectPerson(String email) throws SQLException;
 
  List<Person> selectAllPersons();
  
  void init() throws SQLException;
 
- boolean deletePerson(int id) throws SQLException;
+ boolean deletePerson(String email) throws SQLException;
 
  boolean updatePerson(Person person) throws SQLException;
 

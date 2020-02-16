@@ -13,8 +13,8 @@ import registerServlet.JdbcUtils;
 import registerServlet.model.Person;
 
 /**
- * This DAO class provides CRUD database operations for the table todos in the
- * database.
+ * This DAO class provides CRUD database operations for the table
+ * students_tomcat in the database.
  * 
  * @author Michael
  *
@@ -22,17 +22,17 @@ import registerServlet.model.Person;
 
 public class DaoImpl implements Dao {
 
-//	private static final String INSERT_PERSON_SQL = "INSERT INTO todos"
+//	private static final String INSERT_PERSON_SQL = "INSERT INTO students_tomcat"
 //			+ "  (title, username, description, target_date,  is_done) VALUES " + " (?, ?, ?, ?, ?);";
 //	private static final String INSERT_PERSON_SQL = "INSERT INTO students_tomcat (userFirstName, userLastName, birthDate, role, department, email) "
 //			+ "VALUES('" + userFirstName + "','" + userLastName + "','" + birthDate + "','" + role + "','" + department
 //			+ "','" + email + "') " + "ON DUPLICATE KEY UPDATE email='" + email + "'";
 	private static final String INSERT_PERSON_SQL = "INSERT INTO students_tomcat (userFirstName, userLastName, birthDate, role, department, email) "
-			+ "VALUES (?, ?, ?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE email='?'";
-	private static final String SELECT_TODO_BY_ID = "select userFirstName, userLastName, birthDate, role, department, email from students_tomcat where email =?";
-	private static final String SELECT_ALL_TODOS = "select * from todos";
-	private static final String DELETE_TODO_BY_ID = "delete from todos where id = ?;";
-	private static final String UPDATE_TODO = "update todos set title = ?, username= ?, description =?, target_date =?, is_done = ? where id = ?;";
+			+ "VALUES (?, ?, ?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE email = ?";
+	private static final String SELECT_PERSON_BY_EMAIL = "select userFirstName, userLastName, birthDate, role, department, email from students_tomcat where email =?";
+	private static final String SELECT_ALL_PERSONS = "select * from students_tomcat order by userFirstName ASC";
+	private static final String DELETE_PERSON_BY_EMAIL = "delete from students_tomcat where email = ?;";
+	private static final String UPDATE_PERSON = "update students_tomcat set title = ?, username= ?, description =?, target_date =?, is_done = ? where id = ?;";
 
 	public DaoImpl() {
 	}
@@ -40,11 +40,11 @@ public class DaoImpl implements Dao {
 	@Override
 	public void insertPerson(Person person) throws SQLException {
 		// TODO Auto-generated method stub
-		System.out.println(INSERT_PERSON_SQL);
 		// try-with-resource statement will auto close the connection.
 
-		try (Connection connection = JdbcUtils.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PERSON_SQL)) {
+		Connection connection = JdbcUtils.getConnection();
+		if (connection != null) {
+			PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PERSON_SQL);
 			preparedStatement.setString(1, person.getUserFirstName());
 			preparedStatement.setString(2, person.getUserLastName());
 			preparedStatement.setString(3, person.getBirthDate());
@@ -52,22 +52,21 @@ public class DaoImpl implements Dao {
 			preparedStatement.setString(5, person.getDepartment());
 			preparedStatement.setString(6, person.getEmail());
 			preparedStatement.setString(7, person.getEmail());
-			System.out.println(preparedStatement);
-			preparedStatement.executeUpdate();
-		} catch (SQLException exception) {
-			JdbcUtils.printSQLException(exception);
+			System.out.print(preparedStatement.toString());
+			preparedStatement.execute();
+		} else {
+			throw new SQLException("Cannot connect to Database.");
 		}
-
 	}
 
 	@Override
-	public Person selectPerson(String email) {
+	public Person selectPerson(String email) throws SQLException {
 		// TODO Auto-generated method stub
 		Person person = null;
 		// Step 1: Establishing a Connection
 		try (Connection connection = JdbcUtils.getConnection();
 				// Step 2:Create a statement using connection object
-				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TODO_BY_ID);) {
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PERSON_BY_EMAIL);) {
 			preparedStatement.setString(1, email);
 			System.out.println(preparedStatement);
 			// Step 3: Execute the query or update query
@@ -82,8 +81,6 @@ public class DaoImpl implements Dao {
 				String department = rs.getString("department");
 				person = new Person(userFirstName, userLastName, birthDate, role, department, email);
 			}
-		} catch (SQLException exception) {
-			JdbcUtils.printSQLException(exception);
 		}
 		return person;
 	}
@@ -98,7 +95,7 @@ public class DaoImpl implements Dao {
 		try (Connection connection = JdbcUtils.getConnection();
 
 				// Step 2:Create a statement using connection object
-				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_TODOS);) {
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PERSONS);) {
 			System.out.println(preparedStatement);
 			// Step 3: Execute the query or update query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -120,12 +117,12 @@ public class DaoImpl implements Dao {
 	}
 
 	@Override
-	public boolean deletePerson(int id) throws SQLException {
+	public boolean deletePerson(String email) throws SQLException {
 		// TODO Auto-generated method stub
 		boolean rowDeleted;
 		try (Connection connection = JdbcUtils.getConnection();
-				PreparedStatement statement = connection.prepareStatement(DELETE_TODO_BY_ID);) {
-			statement.setInt(1, id);
+				PreparedStatement statement = connection.prepareStatement(DELETE_PERSON_BY_EMAIL);) {
+			statement.setString(1, email);
 			rowDeleted = statement.executeUpdate() > 0;
 		}
 		return rowDeleted;
@@ -136,7 +133,7 @@ public class DaoImpl implements Dao {
 		// TODO Auto-generated method stub
 		boolean rowUpdated;
 		try (Connection connection = JdbcUtils.getConnection();
-				PreparedStatement statement = connection.prepareStatement(UPDATE_TODO);) {
+				PreparedStatement statement = connection.prepareStatement(UPDATE_PERSON);) {
 			statement.setString(1, person.getUserFirstName());
 			statement.setString(2, person.getUserLastName());
 			statement.setString(3, person.getBirthDate());
@@ -152,12 +149,17 @@ public class DaoImpl implements Dao {
 	public void init() throws SQLException {
 		// TODO Auto-generated method stub
 		Connection connection = JdbcUtils.getConnection();
-		Statement statement = connection.createStatement();
-		String createTable = "CREATE TABLE IF NOT EXISTS `students_tomcat` "
-				+ "( `id` int(11) NOT NULL auto_increment, " + "`userFirstName` varchar(250) NOT NULL default '', "
-				+ "`userLastName` varchar(250)  NOT NULL default '', " + "`birthDate`  DATETIME NOT NULL, "
-				+ "`role` varchar(50)  NULL, " + "`department`  varchar(100) NOT NULL default '', "
-				+ "`email` varchar(50) NOT NULL unique default '', " + "PRIMARY KEY  (`id`) );";
-		statement.execute(createTable);
+		if (connection != null) {
+			Statement statement = connection.createStatement();
+			String createTable = "CREATE TABLE IF NOT EXISTS `students_tomcat` "
+					+ "( `id` int(11) NOT NULL auto_increment, " + "`userFirstName` varchar(250) NOT NULL default '', "
+					+ "`userLastName` varchar(250)  NOT NULL default '', " + "`birthDate`  DATETIME NOT NULL, "
+					+ "`role` varchar(50)  NULL, " + "`department`  varchar(100) NOT NULL default '', "
+					+ "`email` varchar(50) NOT NULL unique default '', " + "PRIMARY KEY  (`id`) );";
+			statement.execute(createTable);
+			connection.close();
+		} else {
+			throw new SQLException("Cannot connect to Database.");
+		}
 	}
 }

@@ -24,10 +24,17 @@ import registerServlet.model.Person;
 /**
  * Servlet implementation class register2db
  */
-@WebServlet("/UserRegisterService/register")
+@WebServlet("/UserRegister/")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Dao userDao;
+
+	@Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub
+		super.init();
+		userDao = new DaoImpl();
+	}
 
 	/**
 	 * Default constructor.
@@ -45,6 +52,19 @@ public class Register extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.getWriter().println("<br>");
+		response.setContentType("text/html");
+
+		String action = request.getServletPath();
+		System.out.println(action);
+
+		switch (action) {
+		case "/delete":
+			deletePerson(request, response);
+			break;
+		case "/edit":
+			editPerson(request, response);
+			break;
+		}
 	}
 
 	/**
@@ -56,14 +76,57 @@ public class Register extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 		response.setContentType("text/html");
-		PrintWriter printWriter = response.getWriter();
+
+		String action = request.getServletPath();
+		System.out.println(action);
+
+		switch (action) {
+		case "/register":
+			registerNewPerson(request, response);
+			break;
+		}
+	}
+
+	private void editPerson(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/editPerson.jsp");
+		dispatcher.include(request, response);
+	}
+
+	private void deletePerson(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String email = request.getParameter("email");
+		boolean success = false;
+		try {
+			success = userDao.deletePerson(email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			request.setAttribute("sql-exception", "sql exception: " + e.getMessage());
+		} finally {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/form.jsp");
+			if (success) {
+				request.setAttribute("success", "user associated with " + email + " deleted!");
+			} else {
+				request.setAttribute("error", "An error occurred while deleting user: " + email);
+			}
+			dispatcher.include(request, response);
+		}
+	}
+
+	private void registerNewPerson(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		String userFirstName = request.getParameter("name");
 		String userLastName = request.getParameter("lastName");
 		String birthDate = request.getParameter("birthDate");
 		String role = request.getParameter("role");
 		String department = request.getParameter("department");
 		String email = request.getParameter("email");
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		Date d;
 		try {
@@ -74,22 +137,28 @@ public class Register extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		Person person = new Person(userFirstName, userLastName, birthDate, role, department, email);
 		boolean success = false;
 		try {
 			userDao.init();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
 			userDao.insertPerson(person);
 			success = true;
 		} catch (SQLException e) {
 			// TODO: handle exception
-			request.setAttribute("error", "sql exception: " + e.getMessage());
+			System.out.print(e.getMessage());
+			request.setAttribute("sql-exception", "sql exception: " + e.getMessage());
 		} finally {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/form.jsp");
 			if (success) {
 				request.setAttribute("success", userFirstName + " " + userLastName + " added");
 			} else {
-				request.setAttribute("success", userFirstName + " " + userLastName + " not added");
+				request.setAttribute("error", userFirstName + " " + userLastName + " not added:");
 			}
 			dispatcher.include(request, response);
 		}
