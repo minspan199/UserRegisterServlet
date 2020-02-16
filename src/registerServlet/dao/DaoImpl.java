@@ -124,8 +124,10 @@ public class DaoImpl implements Dao {
 				PreparedStatement statement = connection.prepareStatement(DELETE_PERSON_BY_EMAIL);) {
 			statement.setString(1, email);
 			rowDeleted = statement.executeUpdate() > 0;
+			System.out.println(rowDeleted + ": " + statement);
 		}
 		return rowDeleted;
+
 	}
 
 	@Override

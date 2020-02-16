@@ -58,9 +58,7 @@ public class Register extends HttpServlet {
 		System.out.println(action);
 
 		switch (action) {
-		case "/delete":
-			deletePerson(request, response);
-			break;
+
 		case "/edit":
 			editPerson(request, response);
 			break;
@@ -84,6 +82,10 @@ public class Register extends HttpServlet {
 		case "/register":
 			registerNewPerson(request, response);
 			break;
+		case "/delete":
+			deletePerson(request, response);
+			response.getWriter().append("deleted!");
+			break;
 		}
 	}
 
@@ -99,6 +101,7 @@ public class Register extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String email = request.getParameter("email");
+		System.out.println("deleting " + email);
 		boolean success = false;
 		try {
 			success = userDao.deletePerson(email);
@@ -107,12 +110,13 @@ public class Register extends HttpServlet {
 			e.printStackTrace();
 			request.setAttribute("sql-exception", "sql exception: " + e.getMessage());
 		} finally {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/form.jsp");
-			if (success) {
-				request.setAttribute("success", "user associated with " + email + " deleted!");
-			} else {
-				request.setAttribute("error", "An error occurred while deleting user: " + email);
-			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/registerMain.jsp");
+//			if (success) {
+//				request.setAttribute("success", "The user associated with " + email + " was deleted!");
+//				System.out.println("The user associated with " + email + " was deleted!");
+//			} else {
+//				request.setAttribute("error", "An error occurred while deleting user: " + email);
+//			}
 			dispatcher.include(request, response);
 		}
 	}
@@ -165,7 +169,7 @@ public class Register extends HttpServlet {
 				if (editPerson.equals("1")) {
 					request.setAttribute("error", userFirstName + " " + userLastName + " not added:");
 				} else {
-					request.setAttribute("success", userFirstName + " " + userLastName + " not updated");
+					request.setAttribute("error", userFirstName + " " + userLastName + " not updated");
 				}
 
 			}

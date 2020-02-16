@@ -27,9 +27,15 @@
 <title>Update info for <%=person.getUserFirstName()%></title>
 </head>
 <body>
-	<h2>
-		Registered form for
-		<%=person.getUserFirstName()%></h2>
+	<div class="container mx-auto my-3">
+		<div class="card text-center bg-warning">
+			<h2>
+				Registered form for
+				<%=person.getUserFirstName()%></h2>
+		</div>
+
+	</div>
+
 	<jsp:include page="/form.jsp">
 		<jsp:param name="edit" value="true" />
 		<jsp:param name="firstName" value="<%=person.getUserFirstName()%>" />

@@ -29,6 +29,7 @@
 	crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="js.js"></script>
+
 <link rel="stylesheet"
 	href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
 	integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
@@ -46,13 +47,7 @@
 	crossorigin="anonymous"></script>
 
 
-<script language="javascript"> 
-function access(){ 
-  <%String str = "Hello World";%>
-   var s="<%=str%>";
-		alert(s);
-	}
-</script>
+<script language="javascript"></script>
 </head>
 <body>
 	<jsp:include page="/header.jsp"></jsp:include>
@@ -70,6 +65,9 @@ function access(){
 			if (request.getAttribute("sql-exception") != null) {
 				exception = request.getAttribute("sql-exception").toString();
 			}
+			System.out.println("success:" + success);
+			System.out.println("error:" + error);
+			System.out.println("sql-exception:" + exception);
 		%>
 
 		<c:if test="${not empty success}">

@@ -16,7 +16,15 @@
 				<!-- Background image for card set in CSS! -->
 			</div>
 			<div class="card-body">
-				<h2 class="card-title text-center py-5">New User</h2>
+				<c:choose>
+					<c:when test="${not empty param.edit}">
+						<h2 class="card-title text-center py-5">Update User</h2>
+					</c:when>
+					<c:otherwise>
+						<h2 class="card-title text-center py-5">New User</h2>
+					</c:otherwise>
+				</c:choose>
+
 				<%
 					String Action = "/UserRegister/register";
 					String urlActionAEncoded = response.encodeURL(Action);
