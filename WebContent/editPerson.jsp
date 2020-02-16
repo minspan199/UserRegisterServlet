@@ -30,6 +30,14 @@
 	<h2>
 		Registered form for
 		<%=person.getUserFirstName()%></h2>
-	<jsp:include page="/form.jsp"></jsp:include>
+	<jsp:include page="/form.jsp">
+		<jsp:param name="edit" value="true" />
+		<jsp:param name="firstName" value="<%=person.getUserFirstName()%>" />
+		<jsp:param name="lastName" value="<%=person.getUserLastName()%>" />
+		<jsp:param name="birthDate" value="<%=person.getBirthDate()%>" />
+		<jsp:param name="role" value="<%=person.getRole()%>" />
+		<jsp:param name="department" value="<%=person.getDepartment()%>" />
+		<jsp:param name="email" value="<%=person.getEmail()%>" />
+	</jsp:include>
 </body>
 </html>

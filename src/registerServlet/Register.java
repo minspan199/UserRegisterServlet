@@ -126,7 +126,7 @@ public class Register extends HttpServlet {
 		String role = request.getParameter("role");
 		String department = request.getParameter("department");
 		String email = request.getParameter("email");
-
+		String editPerson = request.getParameter("editPerson");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		Date d;
 		try {
@@ -151,14 +151,23 @@ public class Register extends HttpServlet {
 			success = true;
 		} catch (SQLException e) {
 			// TODO: handle exception
-			System.out.print(e.getMessage());
+			System.out.println(e.getMessage());
 			request.setAttribute("sql-exception", "sql exception: " + e.getMessage());
 		} finally {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/form.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/registerMain.jsp");
 			if (success) {
-				request.setAttribute("success", userFirstName + " " + userLastName + " added");
+				if (editPerson.equals("1")) {
+					request.setAttribute("success", userFirstName + " " + userLastName + " added");
+				} else {
+					request.setAttribute("success", userFirstName + " " + userLastName + " updated");
+				}
 			} else {
-				request.setAttribute("error", userFirstName + " " + userLastName + " not added:");
+				if (editPerson.equals("1")) {
+					request.setAttribute("error", userFirstName + " " + userLastName + " not added:");
+				} else {
+					request.setAttribute("success", userFirstName + " " + userLastName + " not updated");
+				}
+
 			}
 			dispatcher.include(request, response);
 		}

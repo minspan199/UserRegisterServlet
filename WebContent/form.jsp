@@ -36,31 +36,46 @@
 							<div class="col-6">
 								<label for="name" class="control-label col-xs-4">First
 									name:</label> <input type="text" name="name" id="name"
-									class="form-control" value="${user.name}" required="true" />
+									class="form-control" value="${param.firstName}" required="true" />
 							</div>
 							<div class="col-6">
 								<label for="lastName" class="control-label col-xs-4">Last
 									name:</label> <input type="text" name="lastName" id="lastName"
-									class="form-control" value="${user.lastName}" required="true" />
+									class="form-control" value="${param.lastName}" required="true" />
 							</div>
 						</div>
 
 						<label for="birthdate" class="control-label col-xs-4">Birth
 							date</label> <input type="text" pattern="^\d{2}-\d{2}-\d{4}$"
 							name="birthDate" id="birthdate" class="form-control"
-							value="${user.birthDate}" maxlength="10" placeholder="MM-dd-yyy"
+							value="${param.birthDate}" maxlength="10" placeholder="MM-dd-yyy"
 							required="true"></input> <label for="role"
 							class="control-label col-xs-4">Role:</label> <input type="text"
-							name="role" id="role" class="form-control" value="${user.role}"
+							name="role" id="role" class="form-control" value="${param.role}"
 							required="true" /> <label for="department"
 							class="control-label col-xs-4">Department:</label> <input
 							type="text" name="department" id="department"
-							class="form-control" value="${user.department}" required="true" />
+							class="form-control" value="${param.department}" required="true" />
 
 						<label for="department" class="control-label col-xs-4">E-mail:</label>
 
-						<input type="text" name="email" id="email" class="form-control"
-							value="${user.email}" placeholder="smith@aol.com" required="true" />
+						<c:choose>
+							<c:when test="${not empty param.edit}">
+								<input type="text" name="email" id="email" class="form-control"
+									value="${param.email}" placeholder="smith@aol.com"
+									required="true" readonly />
+								<input type="hidden" name="editPerson" value=0></input>
+								<br />
+							</c:when>
+							<c:otherwise>
+								<input type="text" name="email" id="email" class="form-control"
+									value="${param.email}" placeholder="smith@aol.com"
+									required="true" />
+								<input type="hidden" name="editPerson" value=1></input>
+								<br />
+							</c:otherwise>
+						</c:choose>
+
 						<br>
 						<button type="submit" class="btn btn-outline-warning px-5 py-1">submit</button>
 					</div>
