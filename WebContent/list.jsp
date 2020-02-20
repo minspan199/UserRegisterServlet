@@ -75,8 +75,6 @@
 						<td><%=persons.get(i).getEmail()%></td>
 						<td>
 
-
-
 							<form id="deleteEntry" action="<%=urlActionAEncoded%>"
 								method="post">
 								<input type="hidden" name="email"
@@ -85,7 +83,7 @@
 									href="edit?email=<%=persons.get(i).getEmail()%>"><span
 									class="p-1">Edit</span></a> &nbsp;&nbsp;&nbsp;
 								<button type="submit" class="badge badge-pill badge-danger"
-									onclick="deleteEntry('<%=persons.get(i).getUserFirstName()%>')">
+									onclick="return deleteEntry('<%=persons.get(i).getUserFirstName()%>')">
 									<span class="p-1">Delete</span>
 								</button>
 							</form>

@@ -28,8 +28,9 @@ $(document).ready(function() {
 // }
 
 function deleteEntry(firstName) {
-	if (confirm("Are you sure to delete record of " + firstName + "?")) {
+	if (confirm("Are you sure to delete the record of " + firstName + "?")) {
 		// bind 'myForm' and provide a simple callback function
 		$('#deleteEntry').submit();
-	}
+	} else
+		return false;
 }

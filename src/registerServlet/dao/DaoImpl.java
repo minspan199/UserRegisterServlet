@@ -127,7 +127,6 @@ public class DaoImpl implements Dao {
 			System.out.println(rowDeleted + ": " + statement);
 		}
 		return rowDeleted;
-
 	}
 
 	@Override
