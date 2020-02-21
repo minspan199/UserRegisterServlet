@@ -30,7 +30,7 @@ public class Welcome {
 
 			resource = Files.readString(java.nio.file.Path.of(pathString), StandardCharsets.UTF_8);
 			System.out.println(resource);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,7 +49,7 @@ public class Welcome {
 	@GET
 	@Produces(MediaType.TEXT_XML)
 	public String sayHelloHTML() {
-		String resource = null;
+		String resource = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<hello>Hello World</hello>";
 		return resource;
 	}
 }
