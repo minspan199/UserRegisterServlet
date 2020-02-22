@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
@@ -21,19 +22,23 @@ public class Welcome {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public String sayHello() {
+	public String sayHello(@QueryParam("name") String name) {
 
 		String resource = null;
-		String pathString = context.getRealPath("/WEB-INF/welcome.html");
-		System.out.println(pathString);
-		try {
-
-			resource = Files.readString(java.nio.file.Path.of(pathString), StandardCharsets.UTF_8);
-			System.out.println(resource);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (name == null) {
+			String pathString = context.getRealPath("/WEB-INF/welcome.html");
+			System.out.println(pathString);
+			try {
+				resource = Files.readString(java.nio.file.Path.of(pathString), StandardCharsets.UTF_8);
+				System.out.println(resource);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			resource = "<!DOCTYPE html>" + "<html>" + "<head>" + "<meta charset=\"ISO-8859-1\">"
+					+ "<title>Welcome</title>" + "</head>" + "<body>" + "	<h1>Hello " + name + "!</h1>"
+					+ "</body>\r\n" + "</html>";
 		}
 
 		return resource;
